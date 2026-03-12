@@ -1,0 +1,4 @@
+# Add to .gitignore
+deployment/.env
+deployment/*.log
+*.tar.gz

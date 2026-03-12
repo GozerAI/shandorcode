@@ -6,6 +6,6 @@ Visit https://gozerai.com/pricing for licensing options.
 """
 
 raise ImportError(
-    "The 'shandorcode.visualization' module requires a Pro or Enterprise license. "
+    "The 'shandorcode.analyzers.ai_insights' module requires a Pro or Enterprise license. "
     "Visit https://gozerai.com/pricing for details."
 )

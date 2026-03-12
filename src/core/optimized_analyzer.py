@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# Copyright (C) 2024 Christopher R. Arsenault / GozerAI
+# Copyright (C) 2024 Chris Arseno / GozerAI
 
 """
 Optimized code analyzer with parallel processing and caching.
@@ -20,7 +20,6 @@ import time
 from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import lru_cache
-import pickle
 
 from ..core.models import (
     ShandorCode,
@@ -67,10 +66,13 @@ class AnalysisCache:
             if file_key in self.index:
                 cached_hash = self.index[file_key]
                 if cached_hash == current_hash:
-                    cache_file = self.cache_dir / f"{cached_hash}.pkl"
+                    cache_file = self.cache_dir / f"{cached_hash}.json"
                     if cache_file.exists():
-                        with open(cache_file, 'rb') as f:
-                            return pickle.load(f)
+                        with open(cache_file, 'r') as f:
+                            data = json.load(f)
+                        entities = [CodeEntity(**e) for e in data["entities"]]
+                        dependencies = [Dependency(**d) for d in data["dependencies"]]
+                        return (entities, dependencies)
         except Exception as e:
             logger.debug(f"Cache miss for {file_path}: {e}")
 
@@ -81,10 +83,14 @@ class AnalysisCache:
         try:
             file_key = str(file_path)
             file_hash = self._get_file_hash(file_path)
-            cache_file = self.cache_dir / f"{file_hash}.pkl"
+            cache_file = self.cache_dir / f"{file_hash}.json"
 
-            with open(cache_file, 'wb') as f:
-                pickle.dump((entities, dependencies), f)
+            data = {
+                "entities": [e.model_dump(mode="json") for e in entities],
+                "dependencies": [d.model_dump(mode="json") for d in dependencies],
+            }
+            with open(cache_file, 'w') as f:
+                json.dump(data, f)
 
             self.index[file_key] = file_hash
             self._save_index()

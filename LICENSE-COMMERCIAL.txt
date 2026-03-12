@@ -1,7 +1,7 @@
 COMMERCIAL LICENSE AGREEMENT
 
 CodeGraph Commercial License
-Copyright (C) 2024 Christopher R. Arsenault / GozerAI
+Copyright (C) 2024 Chris Arseno / GozerAI
 
 This software is dual-licensed under AGPL-3.0 (open source) and this
 commercial license.

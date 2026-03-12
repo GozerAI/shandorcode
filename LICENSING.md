@@ -7,14 +7,31 @@ This project is dual-licensed:
 
 ## Tiers
 
-| | Community (Free) | Pro | Enterprise |
-|--|:---:|:---:|:---:|
-| Base functionality | Yes | Yes | Yes |
-| Advanced analysis | — | Yes | Yes |
-| Enterprise visualization | — | — | Yes |
+| Feature | Community (Free) | Pro ($149/mo) | Enterprise ($499/mo) |
+|---------|:---:|:---:|:---:|
+| Code analysis & entity graph | Yes | Yes | Yes |
+| Basic metrics (files, LOC, entities) | Yes | Yes | Yes |
+| Analysis history | Yes | Yes | Yes |
+| Detailed metrics & complexity | — | Yes | Yes |
+| AI insights & semantic search | — | Yes | Yes |
+| Boundary validation | — | — | Yes |
+| Real-time WebSocket updates | — | — | Yes |
+| Fleet-wide code analysis | — | — | Yes |
+| Support SLA | Community | 48h email | 4h priority |
 
-Part of the **GozerAI ecosystem**. See pricing at **https://gozerai.com/pricing**.
+## Getting a License
+
+Visit **https://gozerai.com/pricing** or contact sales@gozerai.com.
 
 ```bash
-export VINZY_LICENSE_KEY="your-key-here"
+export SHANDORCODE_LICENSE_KEY="your-key-here"
+export SHANDORCODE_SERVER="https://api.gozerai.com"
 ```
+
+## Feature Flags
+
+| Flag | Tier |
+|------|------|
+| `std.shandorcode.metrics` | Pro |
+| `std.shandorcode.ai_insights` | Enterprise |
+| `std.shandorcode.boundaries` | Enterprise |

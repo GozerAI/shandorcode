@@ -1,35 +1,31 @@
 # ShandorCode
 
-**AI code analysis and optimization toolkit** — Part of the [GozerAI](https://gozerai.com) ecosystem.
+**Real-time code visualization and architecture analysis tool**
 
-## Overview
+ShandorCode is a production-ready tool for visualizing code structure, dependencies, and complexity metrics across multiple programming languages. It provides real-time updates during development sessions, helping you maintain clean architecture and avoid creating "Frankenstein" products.
 
-ShandorCode is a production-ready tool for visualizing code structure, dependencies, and complexity metrics across multiple programming languages. It provides real-time updates during development sessions, helping you maintain clean architecture.
+## Features
 
-## Features (Community Tier)
-
-- **Multi-language parsing** — Python, TypeScript, JavaScript (extensible)
-- **Complexity metrics** — Cyclomatic complexity, maintainability index, lines of code
-- **Dependency graphs** — Module relationships, import hierarchies, call graphs
-- **Real-time updates** — File watcher with live WebSocket updates
-- **Architecture validation** — Detect violations of modular boundaries
-- **FastAPI server** — WebSocket support for live analysis
-
-### Pro Features (requires license)
-
-- Advanced AI-powered code analysis and insights
-- Pattern detection and recommendations
-
-### Enterprise Features (requires license)
-
-- Interactive D3.js visualization with multiple view modes
-- Enhanced UI dashboards
-
-Visit [gozerai.com/pricing](https://gozerai.com/pricing) for Pro and Enterprise tier details.
+- 🌳 **Multi-language parsing**: Python, TypeScript, JavaScript (extensible to more)
+- 📊 **Complexity metrics**: Cyclomatic complexity, maintainability index, lines of code
+- 🔗 **Dependency graphs**: Module relationships, import hierarchies, call graphs
+- ⚡ **Real-time updates**: File watcher with live WebSocket visualization updates
+- 🎨 **Interactive visualization**: D3.js-powered graphs with multiple view modes
+- 🏗️ **Architecture validation**: Detect violations of modular boundaries
+- 📈 **Trend analysis**: Track how architecture evolves over time
 
 ## Installation
 
 ```bash
+# Clone repository
+git clone <repository-url>
+cd shandorcode
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -e '.[dev]'
 ```
 
@@ -40,9 +36,12 @@ pip install -e '.[dev]'
 python -m src.api.server --path /path/to/your/repo
 
 # Open browser to http://localhost:8765
+# Watch your code structure update in real-time!
 ```
 
 ## Usage
+
+### Analyze a Repository
 
 ```python
 from src.core.analyzer import CodeAnalyzer
@@ -52,6 +51,8 @@ graph = analyzer.analyze()
 
 # Get dependency metrics
 metrics = analyzer.get_metrics()
+print(f"Total files: {metrics['total_files']}")
+print(f"Average complexity: {metrics['avg_complexity']}")
 
 # Check for architecture violations
 violations = analyzer.check_boundaries([
@@ -60,31 +61,50 @@ violations = analyzer.check_boundaries([
 ])
 ```
 
-## Running Tests
+### Real-time Monitoring
 
-```bash
-pytest tests/ -v
+```python
+from src.core.watcher import FileWatcher
+
+def on_change(changes):
+    print(f"Files changed: {changes}")
+    # Reanalyze and update visualization
+
+watcher = FileWatcher("/path/to/repo", on_change)
+watcher.start()
 ```
 
-## Requirements
+## Architecture
 
-- Python >= 3.9
-- See pyproject.toml for dependencies
+ShandorCode follows a modular architecture:
+
+- **Core**: Analysis engine and graph building
+- **Parsers**: Language-specific AST parsing (Tree-sitter based)
+- **Analyzers**: Metrics calculation and pattern detection
+- **Visualization**: Web-based interactive displays
+- **API**: FastAPI server with WebSocket support
+- **Utils**: Shared utilities and helpers
 
 ## License
 
 This project is dual-licensed:
 
-- **AGPL-3.0** — For open-source use (see [LICENSE](LICENSE))
-- **Commercial** — For proprietary integration
+- **AGPL-3.0**: For open source use (see LICENSE.txt)
+- **Commercial**: For proprietary integration (see LICENSE-COMMERCIAL.txt)
 
 Contact chris@gozerai.com for commercial licensing.
+
+## Contributing
+
+See CONTRIBUTING.md for development guidelines.
 
 ## Security
 
 For security issues, please email security@gozerai.com rather than using the issue tracker.
 
-## Links
+## Documentation
 
-- [GozerAI Ecosystem](https://gozerai.com)
-- [Pricing](https://gozerai.com/pricing)
+- [Architecture](docs/architecture.md)
+- [API Reference](docs/api.md)
+- [Parser Development](docs/parsers.md)
+- [Security Model](docs/security.md)

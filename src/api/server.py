@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# Copyright (C) 2024 Christopher R. Arsenault / GozerAI
+# Copyright (C) 2024 Chris Arseno / GozerAI
 
 """
 FastAPI server for ShandorCode visualization.
@@ -26,9 +26,27 @@ from ..core.optimized_analyzer import OptimizedAnalyzer
 from ..core.lightning_analyzer import LightningAnalyzer
 from ..core.models import ModuleBoundary, BoundaryViolation
 from ..core.watcher import FileWatcher
-from ..analyzers.ai_insights import AIInsights
+try:
+    from ..analyzers.ai_insights import AIInsights
+    _HAS_AI_INSIGHTS = True
+except ImportError:
+    _HAS_AI_INSIGHTS = False
 
 logger = logging.getLogger(__name__)
+
+# ── Path safety ───────────────────────────────────────────────────────────
+
+ALLOWED_ROOTS = [
+    os.path.expanduser("~"),
+    "/tmp",
+]
+
+
+def _is_safe_path(path: str) -> bool:
+    """Ensure path is under an allowed root and contains no traversal."""
+    resolved = os.path.realpath(path)
+    return any(resolved.startswith(os.path.realpath(root)) for root in ALLOWED_ROOTS)
+
 
 ZUULTIMATE_BASE_URL = os.environ.get("ZUULTIMATE_BASE_URL", "http://localhost:8000")
 
@@ -135,10 +153,20 @@ async def analyze_repository(request: AnalyzeRequest, tenant: dict = Depends(req
     global analyzer, ai_insights, watcher, current_graph
 
     try:
-        # Validate path
+        # Validate path — reject traversal and restrict to allowed roots
+        if ".." in str(request.path):
+            raise HTTPException(status_code=400, detail="Path traversal not allowed")
+
         repo_path = Path(request.path)
+
+        if not _is_safe_path(str(repo_path)):
+            raise HTTPException(
+                status_code=403,
+                detail="Path not allowed. Analysis restricted to user workspace directories.",
+            )
+
         if not repo_path.exists():
-            raise HTTPException(status_code=404, detail=f"Path not found: {request.path}")
+            raise HTTPException(status_code=404, detail="Path not found")
 
         # Use lightning analyzer for instant results
         logger.info(f"Analyzing repository: {request.path}")
@@ -219,9 +247,11 @@ async def analyze_repository(request: AnalyzeRequest, tenant: dict = Depends(req
             "has_more": len(graph.entities) > 100,
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Analysis failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="An internal error occurred")
 
 
 @app.get("/api/current")

@@ -1,0 +1,66 @@
+# Caddyfile for ShandorCode on gozerai.com
+# Automatic HTTPS with Let's Encrypt
+
+{
+    # Global options
+    email chris@gozerai.com  # Change this to your email
+    admin off
+}
+
+# Main ShandorCode service
+shandor.gozerai.com {
+    # Reverse proxy to ShandorCode container
+    reverse_proxy shandorcode:8765 {
+        # WebSocket support
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+        
+        # Preserve original request info
+        header_up Host {http.request.host}
+        header_up X-Real-IP {http.request.remote}
+        header_up X-Forwarded-For {http.request.remote}
+        header_up X-Forwarded-Proto {http.request.scheme}
+    }
+    
+    # Security headers
+    header {
+        # Enable HSTS
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        
+        # Prevent clickjacking
+        X-Frame-Options "SAMEORIGIN"
+        
+        # XSS protection
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        
+        # Referrer policy
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+    
+    # Rate limiting
+    rate_limit {
+        zone shandor {
+            key {remote_host}
+            events 100
+            window 1m
+        }
+    }
+    
+    # Logging
+    log {
+        output file /var/log/caddy/shandor.log
+        format json
+        level INFO
+    }
+}
+
+# Redirect www to non-www
+www.shandor.gozerai.com {
+    redir https://shandor.gozerai.com{uri} permanent
+}
+
+# Health check endpoint (internal only)
+:8080 {
+    respond /health "OK" 200
+}

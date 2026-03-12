@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# Copyright (C) 2024 Christopher R. Arsenault / GozerAI
+# Copyright (C) 2024 Chris Arseno / GozerAI
 
 """
 Core data models for ShandorCode.

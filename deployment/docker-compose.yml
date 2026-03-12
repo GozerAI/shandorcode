@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Caddy reverse proxy with automatic HTTPS
+  caddy:
+    image: caddy:2-alpine
+    container_name: shandor_caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - shandor_net
+    environment:
+      - DOMAIN=${DOMAIN:-shandorcode.gozerai.com}
+
+  # ShandorCode application
+  shandorcode:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: shandor_app
+    restart: unless-stopped
+    volumes:
+      # Mount analysis directory (read-only for security)
+      - ${ANALYSIS_PATH:-/var/shandorcode/repos}:/repos:ro
+      # Persistent data
+      - shandor_data:/app/data
+    networks:
+      - shandor_net
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONIOENCODING=utf-8
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8765/api/current')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Watchtower for automatic updates (optional)
+  watchtower:
+    image: containrrr/watchtower
+    container_name: shandor_watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 3600 --cleanup
+    networks:
+      - shandor_net
+
+networks:
+  shandor_net:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
+  shandor_data:
