@@ -1,7 +1,7 @@
 COMMERCIAL LICENSE AGREEMENT
 
 CodeGraph Commercial License
-Copyright (C) 2024 Chris Arseno / 1450 Enterprises LLC
+Copyright (C) 2024 Christopher R. Arsenault / GozerAI
 
 This software is dual-licensed under AGPL-3.0 (open source) and this
 commercial license.
@@ -21,7 +21,7 @@ PRICING & TERMS
 
 Contact for commercial licensing:
 - Email: chris@gozerai.com
-- Company: 1450 Enterprises LLC
+- Company: GozerAI
 
 Pricing is based on:
 - Number of developers

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# Copyright (C) 2024 Chris Arseno / 1450 Enterprises LLC
+# Copyright (C) 2024 Christopher R. Arsenault / GozerAI
 
 """
 Main code analyzer that coordinates parsing and graph building.
