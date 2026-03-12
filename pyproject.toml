@@ -1,0 +1,53 @@
+[project]
+name = "shandorcode"
+version = "0.1.0"
+description = "Real-time code visualization and architecture analysis tool"
+requires-python = ">=3.9"
+license = {text = "AGPL-3.0-or-later"}
+authors = [
+    {name = "Chris Arseno", email = "chris@gozerai.com"}
+]
+
+dependencies = [
+    "tree-sitter>=0.21.0",
+    "tree-sitter-python>=0.21.0",
+    "tree-sitter-javascript>=0.21.0",
+    "tree-sitter-typescript>=0.21.0",
+    "watchdog>=3.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "websockets>=12.0",
+    "networkx>=3.2",
+    "pydantic>=2.5.0",
+    "radon>=6.0.1",
+    "pygments>=2.17.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.11.0",
+    "pylint>=3.0.0",
+    "mypy>=1.7.0",
+]
+
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 100
+target-version = ['py39']
+
+[tool.pylint.messages_control]
+max-line-length = 100
+disable = ["C0103", "C0114", "C0115", "C0116"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=src --cov-report=html --cov-report=term-missing --cov-fail-under=80"

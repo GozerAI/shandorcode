@@ -1,0 +1,49 @@
+COMMERCIAL LICENSE AGREEMENT
+
+CodeGraph Commercial License
+Copyright (C) 2024 Chris Arseno / 1450 Enterprises LLC
+
+This software is dual-licensed under AGPL-3.0 (open source) and this
+commercial license.
+
+COMMERCIAL USE
+
+For commercial use, proprietary integration, or use in closed-source
+projects, a commercial license is required.
+
+Commercial licenses include:
+- Right to use in proprietary software
+- No requirement to open source derivative works
+- Technical support and updates
+- Custom feature development available
+
+PRICING & TERMS
+
+Contact for commercial licensing:
+- Email: chris@gozerai.com
+- Company: 1450 Enterprises LLC
+
+Pricing is based on:
+- Number of developers
+- Deployment scale
+- Support requirements
+- Custom feature needs
+
+WHAT'S INCLUDED
+
+Commercial license grants:
+- Perpetual use license
+- All updates during license term
+- Email support
+- Option for custom development
+- Removal of AGPL requirements
+
+RESTRICTIONS
+
+Even under commercial license:
+- No sublicensing
+- No redistribution as standalone product
+- Proper attribution required
+- Respect intellectual property
+
+For detailed commercial terms and pricing, please contact us.
