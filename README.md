@@ -1,110 +1,147 @@
 # ShandorCode
 
-**Real-time code visualization and architecture analysis tool**
+**Code analysis, architecture visualization, and complexity metrics.**
 
-ShandorCode is a production-ready tool for visualizing code structure, dependencies, and complexity metrics across multiple programming languages. It provides real-time updates during development sessions, helping you maintain clean architecture and avoid creating "Frankenstein" products.
+Part of the [GozerAI](https://gozerai.com) ecosystem.
 
-## Features
+## Overview
 
-- 🌳 **Multi-language parsing**: Python, TypeScript, JavaScript (extensible to more)
-- 📊 **Complexity metrics**: Cyclomatic complexity, maintainability index, lines of code
-- 🔗 **Dependency graphs**: Module relationships, import hierarchies, call graphs
-- ⚡ **Real-time updates**: File watcher with live WebSocket visualization updates
-- 🎨 **Interactive visualization**: D3.js-powered graphs with multiple view modes
-- 🏗️ **Architecture validation**: Detect violations of modular boundaries
-- 📈 **Trend analysis**: Track how architecture evolves over time
+ShandorCode analyzes codebases to produce dependency graphs, complexity metrics, and architecture boundary checks. It ships with parsers for Python and JavaScript/TypeScript, a real-time file watcher, and a FastAPI server with WebSocket support for live visualization. Pro tier adds AI-powered code insights.
 
 ## Installation
 
 ```bash
-# Clone repository
-git clone <repository-url>
+git clone https://github.com/GozerAI/shandorcode.git
 cd shandorcode
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -e '.[dev]'
+pip install -e ".[dev]"
 ```
 
 ## Quick Start
 
-```bash
-# Start ShandorCode server
-python -m src.api.server --path /path/to/your/repo
-
-# Open browser to http://localhost:8765
-# Watch your code structure update in real-time!
-```
-
-## Usage
-
-### Analyze a Repository
+### Analyze a codebase
 
 ```python
 from src.core.analyzer import CodeAnalyzer
 
-analyzer = CodeAnalyzer("/path/to/repo")
+analyzer = CodeAnalyzer("/path/to/your/repo")
 graph = analyzer.analyze()
 
-# Get dependency metrics
+# Get complexity metrics
 metrics = analyzer.get_metrics()
 print(f"Total files: {metrics['total_files']}")
 print(f"Average complexity: {metrics['avg_complexity']}")
+```
 
-# Check for architecture violations
+### Parse individual files
+
+```python
+from src.parsers.python_parser import PythonParser
+from src.parsers.javascript_parser import JavaScriptParser
+
+# Parse a Python file
+py_parser = PythonParser()
+py_result = py_parser.parse("/path/to/module.py")
+
+# Parse a JavaScript/TypeScript file
+js_parser = JavaScriptParser()
+js_result = js_parser.parse("/path/to/component.tsx")
+```
+
+### Check architecture boundaries
+
+```python
 violations = analyzer.check_boundaries([
     {"name": "core", "path": "src/core", "allowed_deps": []},
     {"name": "api", "path": "src/api", "allowed_deps": ["core"]},
+    {"name": "parsers", "path": "src/parsers", "allowed_deps": ["core"]},
 ])
 ```
 
-### Real-time Monitoring
+### Real-time monitoring
 
 ```python
 from src.core.watcher import FileWatcher
 
 def on_change(changes):
     print(f"Files changed: {changes}")
-    # Reanalyze and update visualization
 
 watcher = FileWatcher("/path/to/repo", on_change)
 watcher.start()
 ```
 
-## Architecture
+### Start the API server
 
-ShandorCode follows a modular architecture:
+```bash
+python -m src.api.server --path /path/to/your/repo
+# Server runs at http://localhost:8765
+```
 
-- **Core**: Analysis engine and graph building
-- **Parsers**: Language-specific AST parsing (Tree-sitter based)
-- **Analyzers**: Metrics calculation and pattern detection
-- **Visualization**: Web-based interactive displays
-- **API**: FastAPI server with WebSocket support
-- **Utils**: Shared utilities and helpers
+## Feature Tiers
+
+| Feature | Community | Pro | Enterprise |
+|---|:---:|:---:|:---:|
+| Code analysis (complexity, LOC, maintainability) | x | x | x |
+| Python parser | x | x | x |
+| JavaScript/TypeScript parser | x | x | x |
+| Dependency graph generation | x | x | x |
+| File watcher (real-time updates) | x | x | x |
+| Lightning analyzer (fast mode) | x | x | x |
+| Architecture boundary checking | | x | x |
+| AI-powered semantic search | | x | x |
+| Code smell detection | | x | x |
+| Refactoring suggestions | | x | x |
+| Complexity explanations | | x | x |
+| Auto-generated documentation | | x | x |
+| Similar code detection | | x | x |
+| Advanced visualization | | | x |
+
+### Gated Features
+
+Pro and Enterprise features require a valid entitlement via the GozerAI platform. Visit [gozerai.com/pricing](https://gozerai.com/pricing) to upgrade.
+
+## API Endpoints
+
+### Community (shandorcode:basic)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/health` | Health check |
+| POST | `/api/analyze` | Analyze a repository |
+| GET | `/api/current` | Current analysis results |
+| GET | `/api/history` | Analysis history |
+| GET | `/api/metrics` | Complexity metrics |
+| GET | `/api/metrics/detailed` | Detailed per-file metrics |
+| GET | `/api/graph` | Dependency graph data |
+| WS | `/ws` | WebSocket for live updates |
+
+### Pro (shandorcode:full)
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/api/check-boundaries` | Architecture boundary check |
+| POST | `/api/ai/search` | Semantic code search |
+| GET | `/api/ai/code-smells` | Detect code smells |
+| GET | `/api/ai/refactor-suggestions/{id}` | Refactoring suggestions |
+| GET | `/api/ai/complexity-explained/{id}` | Complexity explanation |
+| GET | `/api/ai/generate-docs/{id}` | Auto-generate documentation |
+| GET | `/api/ai/similar-code/{id}` | Find similar code patterns |
+
+## Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `ZUULTIMATE_BASE_URL` | `http://localhost:8000` | Auth service URL |
+
+## Requirements
+
+- Python >= 3.10
+- FastAPI + httpx for the API server
 
 ## License
 
-This project is dual-licensed:
+Dual-licensed:
 
-- **AGPL-3.0**: For open source use (see LICENSE.txt)
-- **Commercial**: For proprietary integration (see LICENSE-COMMERCIAL.txt)
+- **AGPL-3.0** for open source use (see [LICENSE.txt](LICENSE.txt))
+- **Commercial** for proprietary integration (see [LICENSE-COMMERCIAL.txt](LICENSE-COMMERCIAL.txt))
 
 Contact chris@gozerai.com for commercial licensing.
-
-## Contributing
-
-See CONTRIBUTING.md for development guidelines.
-
-## Security
-
-For security issues, please email security@gozerai.com rather than using the issue tracker.
-
-## Documentation
-
-- [Architecture](docs/architecture.md)
-- [API Reference](docs/api.md)
-- [Parser Development](docs/parsers.md)
-- [Security Model](docs/security.md)
